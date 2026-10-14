@@ -1,0 +1,20 @@
+{
+  "name": "locadora-retro",
+  "version": "1.0.0",
+  "description": "Locadora Retrô Anos 90 - Super Nintendo com The Legend of Zelda PT-BR para PC e Mobile",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "snes",
+    "zelda",
+    "pt-br",
+    "locadora",
+    "emulatorjs",
+    "webassembly"
+  ],
+  "author": "Henrique Chinaglia",
+  "license": "MIT"
+}

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Locadora Retrô 90s - Super Nintendo & Games</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="app" class="store-view">
+    <!-- Fachada da Locadora -->
+    <header class="store-header">
+      <div class="neon-sign-container">
+        <div class="neon-badge">SUPER NINTENDO CLUB</div>
+        <h1 class="neon-title">LOCADORA RETRÔ</h1>
+        <div class="neon-sub">FITAS, CARTUCHOS & GAMES DOS ANOS 90</div>
+      </div>
+      <div class="store-status-bar">
+        <div class="status-indicator">
+          <span class="blinking-dot"></span> ABERTO HOJE
+        </div>
+        <div class="vcr-clock" id="vcrClock">12:00 PM</div>
+        <div class="store-actions">
+          <button id="btnCustomRom" class="retro-btn secondary-btn" title="Carregar outra ROM do seu PC">
+            <span>💾</span> Carregar Outra ROM
+          </button>
+          <input type="file" id="romFileInput" accept=".sfc,.smc,.zip" style="display: none;">
+        </div>
+      </div>
+    </header>
+
+    <!-- Ambiente da Loja: Estante de Fitas -->
+    <main class="store-main">
+      <div class="shelf-banner">
+        <span class="section-tag">PRATELEIRA PRINCIPAL</span>
+        <h2>SUPER NES // CLÁSSICOS & TRADUÇÕES PT-BR</h2>
+        <p class="shelf-hint">Clique em um cartucho para ver detalhes ou alugar e jogar na hora!</p>
+      </div>
+
+      <div class="shelf-container">
+        <div class="shelf-wood">
+          <div class="shelf-bracket left"></div>
+          <div class="shelf-grid" id="gamesShelf">
+            <!-- Os cartuchos serão injetados dinamicamente via app.js -->
+          </div>
+          <div class="shelf-board"></div>
+          <div class="shelf-bracket right"></div>
+        </div>
+      </div>
+
+      <!-- Rodapé temático da locadora -->
+      <div class="retro-rules-card">
+        <div class="rules-header">REGRAS DA LOCADORA</div>
+        <ul>
+          <li>⚠️ <strong>Não assopre o cartucho</strong> — passe apenas um cotonete com álcool isopropílico.</li>
+          <li>🎮 <strong>Devolução na segunda-feira</strong> até as 18h para evitar multa de R$ 2,00.</li>
+          <li>🇧🇷 <strong>The Legend of Zelda</strong> 100% traduzido para o Português do Brasil!</li>
+        </ul>
+      </div>
+    </main>
+
+    <!-- Modal de Detalhes da Fita / Ficha de Aluguel -->
+    <div id="gameModal" class="modal-backdrop hidden">
+      <div class="modal-card">
+        <button id="modalCloseBtn" class="modal-close-btn">&times;</button>
+        <div class="modal-content">
+          <div class="modal-cover-wrapper">
+            <img id="modalCover" src="" alt="Capa do Jogo" class="modal-cover-img">
+            <div id="modalBadge" class="modal-badge">PT-BR</div>
+          </div>
+          <div class="modal-info">
+            <h2 id="modalTitle" class="modal-title">Nome do Jogo</h2>
+            <div id="modalSubtitle" class="modal-subtitle">Subtítulo</div>
+            
+            <div class="modal-specs-grid">
+              <div class="spec-item"><span class="spec-label">SISTEMA:</span> <span id="modalSystem">SNES</span></div>
+              <div class="spec-item"><span class="spec-label">ANO:</span> <span id="modalYear">1992</span></div>
+              <div class="spec-item"><span class="spec-label">GÊNERO:</span> <span id="modalGenre">Aventura</span></div>
+              <div class="spec-item"><span class="spec-label">JOGADORES:</span> <span id="modalPlayers">1</span></div>
+              <div class="spec-item col-span-2"><span class="spec-label">DEV / PUB:</span> <span id="modalDev">Nintendo</span></div>
+              <div class="spec-item col-span-2 highlight-spec"><span class="spec-label">LOCALIZAÇÃO:</span> <span id="modalTranslation">Português (Brasil)</span></div>
+            </div>
+
+            <p id="modalDescription" class="modal-desc">Descrição do jogo...</p>
+
+            <div class="modal-action-buttons">
+              <button id="btnPlayGame" class="retro-btn play-btn">
+                <span class="btn-icon">▶</span> ALUGAR & JOGAR AGORA
+              </button>
+              <div class="download-dropdown">
+                <button id="btnDownloadRom" class="retro-btn download-btn" title="Baixar arquivos para jogar offline">
+                  <span>📥</span> Baixar ROM / Patch
+                </button>
+                <div class="dropdown-content">
+                  <a id="linkDownloadZip" href="games/zelda_alttp_ptbr.zip" download>📦 ROM Pronta PT-BR (.zip)</a>
+                  <a id="linkDownloadSfc" href="games/zelda_alttp_ptbr.sfc" download>🎮 ROM Extraída PT-BR (.sfc)</a>
+                  <a id="linkDownloadIps" href="games/zelda_alttp_ptbr.ips" download>🧩 Patch de Tradução (.ips)</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tela da TV CRT / Sessão de Jogo -->
+    <div id="tvGameRoom" class="tv-room hidden">
+      <div class="tv-top-bar">
+        <button id="btnBackToShelf" class="retro-btn back-btn">
+          <span>◀</span> Devolver Fita (Voltar à Estante)
+        </button>
+        <div class="tv-game-title" id="tvGameTitle">THE LEGEND OF ZELDA: A LINK TO THE PAST</div>
+        <div class="tv-options">
+          <button id="btnToggleScanlines" class="retro-btn option-btn">Filtro CRT: LIGADO</button>
+          <button id="btnFullscreen" class="retro-btn option-btn">Tela Cheia</button>
+        </div>
+      </div>
+
+      <!-- Chassi da TV de Tubo dos Anos 90 -->
+      <div class="crt-cabinet">
+        <div class="crt-brand">PHILCO-HITACHI • 20" LUMINA</div>
+        <div class="crt-screen-frame">
+          <div id="crtOverlay" class="crt-scanlines"></div>
+          <div class="crt-bezel">
+            <div id="emulatorContainer" class="emulator-viewport">
+              <!-- EmulatorJS será montado dinamicamente aqui -->
+            </div>
+          </div>
+          <div class="tv-channel-osd" id="tvChannelOsd">AV - CH 03</div>
+        </div>
+        <div class="crt-controls-panel">
+          <div class="crt-speaker-grille"></div>
+          <div class="crt-dials">
+            <div class="crt-dial" title="Volume"></div>
+            <div class="crt-dial" title="Sintonia"></div>
+            <div class="power-led on"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Guia rápido de controles para PC e Mobile -->
+      <div class="controls-legend">
+        <div class="legend-card">
+          <h4>⌨️ CONTROLES NO TECLADO (PC)</h4>
+          <p><strong>Direcionais:</strong> Setas do Teclado &nbsp;|&nbsp; <strong>A:</strong> X &nbsp;|&nbsp; <strong>B:</strong> Z &nbsp;|&nbsp; <strong>X:</strong> S &nbsp;|&nbsp; <strong>Y:</strong> A</p>
+          <p><strong>L / R:</strong> Q / W &nbsp;|&nbsp; <strong>Start:</strong> Enter &nbsp;|&nbsp; <strong>Select:</strong> Shift &nbsp;|&nbsp; <em>Aceita controles USB/Bluetooth</em></p>
+        </div>
+        <div class="legend-card mobile-tip">
+          <h4>📱 CONTROLES NO CELULAR (MOBILE)</h4>
+          <p>Os botões virtuais de toque (D-Pad e botões coloridos) aparecerão automaticamente na tela do seu smartphone!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
