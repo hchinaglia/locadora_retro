@@ -3,8 +3,11 @@
 // ============================================================
 
 let gamesCatalog = [];
+let mobileGamesCatalog = [];
 let activeGame = null;
+let activeMobileGame = null;
 let audioCtx = null;
+let serverInfo = { localIp: window.location.hostname || 'localhost', port: window.location.port || 3000 };
 
 // Inicializa o contexto de áudio para efeitos sonoros retrô
 function getAudioContext() {
@@ -15,6 +18,18 @@ function getAudioContext() {
     audioCtx.resume();
   }
   return audioCtx;
+}
+
+// Obter dados de rede do servidor para o QR Code
+async function fetchServerInfo() {
+  try {
+    const res = await fetch('/api/info');
+    if (res.ok) {
+      serverInfo = await res.json();
+    }
+  } catch (err) {
+    console.warn('Não foi possível obter /api/info:', err);
+  }
 }
 
 // Efeito sonoro sintetizado: clique mecânico do cartucho
@@ -81,7 +96,7 @@ function startVcrClock() {
   setInterval(update, 1000);
 }
 
-// Carregar catálogo de jogos da estante
+// Carregar catálogo de jogos da estante (SNES)
 async function loadGames() {
   try {
     const res = await fetch('games.json');
@@ -92,9 +107,21 @@ async function loadGames() {
   }
 }
 
-// Renderizar fitas na prateleira
+// Carregar catálogo de jogos Mobile (Android APK)
+async function loadMobileGames() {
+  try {
+    const res = await fetch('mobile_games.json');
+    mobileGamesCatalog = await res.json();
+    renderMobileShelf(mobileGamesCatalog);
+  } catch (err) {
+    console.error('Erro ao carregar mobile_games.json:', err);
+  }
+}
+
+// Renderizar fitas na prateleira SNES
 function renderShelf(games) {
   const shelfEl = document.getElementById('gamesShelf');
+  if (!shelfEl) return;
   shelfEl.innerHTML = '';
 
   games.forEach((game, index) => {
@@ -130,6 +157,92 @@ function renderShelf(games) {
 
     shelfEl.appendChild(cartWrapper);
   });
+}
+
+// Renderizar dispositivos/jogos na prateleira Mobile
+function renderMobileShelf(games) {
+  const shelfEl = document.getElementById('mobileShelf');
+  if (!shelfEl) return;
+  shelfEl.innerHTML = '';
+
+  games.forEach((game) => {
+    const cardWrapper = document.createElement('div');
+    cardWrapper.className = 'mobile-card-wrapper';
+    cardWrapper.dataset.mobileId = game.id;
+
+    cardWrapper.innerHTML = `
+      <div class="mobile-device-shell">
+        <div class="mobile-speaker"></div>
+        <div class="mobile-screen-bezel">
+          <img src="${game.cover}" alt="${game.title}" class="mobile-card-cover-img" loading="lazy">
+          <div class="mobile-card-info">
+            <div class="mobile-card-title">${game.title}</div>
+            <div class="mobile-card-sub">${game.version} • ${game.apkSize}</div>
+            <div class="mobile-card-badge">${game.badge || 'PT-BR'}</div>
+          </div>
+        </div>
+        <div class="mobile-home-indicator"></div>
+      </div>
+    `;
+
+    cardWrapper.addEventListener('click', () => {
+      playCartridgeClick();
+      openMobileGameModal(game);
+    });
+
+    shelfEl.appendChild(cardWrapper);
+  });
+}
+
+// Abrir modal de jogo Mobile
+function openMobileGameModal(game) {
+  activeMobileGame = game;
+  const modal = document.getElementById('mobileModal');
+
+  document.getElementById('mobileModalCover').src = game.cover;
+  document.getElementById('mobileModalTitle').textContent = game.title;
+  document.getElementById('mobileModalSubtitle').textContent = game.subtitle || '';
+  document.getElementById('mobileModalSystem').textContent = game.system || 'Android (arm64-v8a)';
+  document.getElementById('mobileModalSize').textContent = game.apkSize || '266.5 MB';
+  document.getElementById('mobileModalVersion').textContent = game.version || 'v2.1.0';
+  document.getElementById('mobileModalGenre').textContent = game.genre || 'Card Game';
+  document.getElementById('mobileModalPlayers').textContent = game.players || '1-4 Jogadores';
+  document.getElementById('mobileModalPkg').textContent = game.packageName || 'com.direwolfdigital.munchkin';
+  document.getElementById('mobileModalDev').textContent = `${game.developer || 'Dire Wolf'} / ${game.publisher || 'Steve Jackson Games'}`;
+  document.getElementById('mobileModalTranslation').textContent = game.translation || 'Português (Brasil)';
+  document.getElementById('mobileModalDescription').textContent = game.description || '';
+
+  // Configurar link de download direto e QR Code com IP da rede local
+  const currentHost = window.location.hostname;
+  let baseOrigin;
+  if (currentHost === 'localhost' || currentHost === '127.0.0.1') {
+    // Para QR Code, usa o IP da rede local (ex: 10.4.0.172) para celulares na mesma rede Wi-Fi conseguirem acessar
+    baseOrigin = `http://${serverInfo.localIp}:${serverInfo.port || 3000}`;
+  } else {
+    baseOrigin = window.location.origin;
+  }
+
+  const apkFullUrl = `${baseOrigin}/${game.apk}`;
+  
+  const btnDownload = document.getElementById('btnDirectDownloadApk');
+  btnDownload.href = game.apk;
+  btnDownload.download = game.filename || 'Munchkin-v2.1.0-PTBR.apk';
+  btnDownload.innerHTML = `<span class="btn-icon">📥</span> BAIXAR APK DIRETO (${game.apkSize || '266 MB'})`;
+
+  const inputUrl = document.getElementById('inputApkUrl');
+  inputUrl.value = apkFullUrl;
+
+  const qrImg = document.getElementById('qrCodeImg');
+  if (qrImg) {
+    qrImg.src = `assets/qr_munchkin.svg?t=${Date.now()}`;
+  }
+
+  modal.classList.remove('hidden');
+}
+
+// Fechar modal Mobile
+function closeMobileGameModal() {
+  document.getElementById('mobileModal').classList.add('hidden');
 }
 
 // Abrir modal de detalhes da fita
@@ -251,13 +364,80 @@ function returnToShelf() {
 
 // Configurar ouvintes de eventos da interface
 function setupEventListeners() {
-  // Fechar modal no X e fora do card
+  // Alternância de Abas do Catálogo (SNES vs Mobile)
+  const tabSnes = document.getElementById('tabSnes');
+  const tabMobile = document.getElementById('tabMobile');
+  const snesSection = document.getElementById('snesSection');
+  const mobileSection = document.getElementById('mobileSection');
+
+  if (tabSnes && tabMobile) {
+    tabSnes.addEventListener('click', () => {
+      playCartridgeClick();
+      tabSnes.classList.add('active');
+      tabMobile.classList.remove('active');
+      snesSection.classList.remove('hidden');
+      mobileSection.classList.add('hidden');
+    });
+
+    tabMobile.addEventListener('click', () => {
+      playCartridgeClick();
+      tabMobile.classList.add('active');
+      tabSnes.classList.remove('active');
+      mobileSection.classList.remove('hidden');
+      snesSection.classList.add('hidden');
+    });
+  }
+
+  // Fechar modal SNES no X e fora do card
   document.getElementById('modalCloseBtn').addEventListener('click', closeGameModal);
   document.getElementById('gameModal').addEventListener('click', (e) => {
     if (e.target.id === 'gameModal') closeGameModal();
   });
 
-  // Botão de jogar no modal
+  // Fechar modal Mobile no X e fora do card
+  const mobileCloseBtn = document.getElementById('mobileModalCloseBtn');
+  const mobileModal = document.getElementById('mobileModal');
+  if (mobileCloseBtn) {
+    mobileCloseBtn.addEventListener('click', closeMobileGameModal);
+  }
+  if (mobileModal) {
+    mobileModal.addEventListener('click', (e) => {
+      if (e.target.id === 'mobileModal') closeMobileGameModal();
+    });
+  }
+
+  // Abas internas de instruções do Modal Mobile
+  document.querySelectorAll('.inst-tab').forEach((tabBtn) => {
+    tabBtn.addEventListener('click', () => {
+      document.querySelectorAll('.inst-tab').forEach((b) => b.classList.remove('active'));
+      document.querySelectorAll('.inst-panel').forEach((p) => p.classList.remove('active'));
+      tabBtn.classList.add('active');
+      const targetId = tabBtn.dataset.target;
+      const targetPanel = document.getElementById(targetId);
+      if (targetPanel) {
+        targetPanel.classList.add('active');
+      }
+    });
+  });
+
+  // Copiar link do APK no Modal Mobile
+  const btnCopy = document.getElementById('btnCopyApkUrl');
+  const inputApkUrl = document.getElementById('inputApkUrl');
+  if (btnCopy && inputApkUrl) {
+    btnCopy.addEventListener('click', () => {
+      inputApkUrl.select();
+      navigator.clipboard.writeText(inputApkUrl.value).then(() => {
+        btnCopy.textContent = '✅ Copiado!';
+        setTimeout(() => {
+          btnCopy.textContent = '📋 Copiar Link';
+        }, 2000);
+      }).catch(() => {
+        btnCopy.textContent = '✅ Selecionado!';
+      });
+    });
+  }
+
+  // Botão de jogar no modal SNES
   document.getElementById('btnPlayGame').addEventListener('click', () => {
     if (activeGame && activeGame.playable) {
       launchGame(activeGame);
@@ -316,11 +496,14 @@ function setupEventListeners() {
     }
   });
 
-  // Fechar com tecla ESC
+  // Fechar modais com tecla ESC
   window.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       if (!document.getElementById('gameModal').classList.contains('hidden')) {
         closeGameModal();
+      }
+      if (document.getElementById('mobileModal') && !document.getElementById('mobileModal').classList.contains('hidden')) {
+        closeMobileGameModal();
       }
     }
   });
@@ -334,8 +517,10 @@ function setupEventListeners() {
 }
 
 // Inicialização
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   startVcrClock();
+  await fetchServerInfo();
   loadGames();
+  loadMobileGames();
   setupEventListeners();
 });

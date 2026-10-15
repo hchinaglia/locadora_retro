@@ -1,0 +1,22 @@
+[
+  {
+    "id": "munchkin-ptbr",
+    "title": "Munchkin",
+    "subtitle": "Edição Digital Oficial (PT-BR)",
+    "version": "v2.1.0",
+    "apkSize": "266.5 MB",
+    "system": "Android (arm64-v8a)",
+    "genre": "Card Game / RPG de Masmorra",
+    "players": "1-4 Jogadores (Solo & Multiplayer)",
+    "developer": "Dire Wolf Digital",
+    "publisher": "Steve Jackson Games",
+    "translation": "Português do Brasil (100% Cartas, Itens, Classes e Raças)",
+    "cover": "assets/munchkin_icon.png",
+    "apk": "apks/Munchkin-v2.1.0-PTBR.apk",
+    "filename": "Munchkin-v2.1.0-PTBR.apk",
+    "packageName": "com.direwolfdigital.munchkin",
+    "badge": "PT-BR 100%",
+    "playable": true,
+    "description": "Desça na masmorra. Mate tudo o que encontrar. Apunhale seus amigos pelas costas e roube os pertences deles. Pegue o tesouro e corra! A hilária adaptação oficial do lendário jogo de cartas de Steve Jackson Games. Enfrente monstros icônicos como o Dragão de Plutônio ou a Planta de Vaso, equipe a Armadura Flamejante e a Bota de Chutar Bundas, e alcance o Nível 10 para vencer!"
+  }
+]

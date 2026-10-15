@@ -2,6 +2,7 @@ import http from 'http';
 import fs from 'fs';
 import path from 'path';
 import os from 'os';
+import { exec } from 'child_process';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -24,6 +25,7 @@ const MIME_TYPES = {
   '.sfc': 'application/octet-stream',
   '.smc': 'application/octet-stream',
   '.ips': 'application/octet-stream',
+  '.apk': 'application/vnd.android.package-archive',
   '.wasm': 'application/wasm'
 };
 
@@ -51,7 +53,7 @@ function resolveFile(urlPath) {
     return srcCandidate;
   }
 
-  // 2. Verifica na pasta public/ (games/, assets/, games.json)
+  // 2. Verifica na pasta public/ (games/, assets/, apks/, games.json)
   const pubCandidate = path.join(PUBLIC_DIR, cleanPath);
   if (fs.existsSync(pubCandidate) && fs.statSync(pubCandidate).isFile()) {
     return pubCandidate;
@@ -72,6 +74,17 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // Endpoint de informações de rede para QR Code dinâmico
+  const urlPath = req.url.split('?')[0];
+  if (urlPath === '/api/info') {
+    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+    res.end(JSON.stringify({
+      localIp: getLocalIp(),
+      port: PORT
+    }));
+    return;
+  }
+
   const filePath = resolveFile(req.url);
 
   if (!filePath) {
@@ -84,6 +97,12 @@ const server = http.createServer((req, res) => {
   const contentType = MIME_TYPES[ext] || 'application/octet-stream';
   const stat = fs.statSync(filePath);
   const fileSize = stat.size;
+  const fileName = path.basename(filePath);
+
+  const downloadHeaders = {};
+  if (ext === '.apk') {
+    downloadHeaders['Content-Disposition'] = `attachment; filename="${fileName}"`;
+  }
 
   // Suporte a HTTP Range (necessário para downloads e streams grandes)
   const range = req.headers.range;
@@ -105,14 +124,16 @@ const server = http.createServer((req, res) => {
       'Content-Range': `bytes ${start}-${end}/${fileSize}`,
       'Accept-Ranges': 'bytes',
       'Content-Length': chunksize,
-      'Content-Type': contentType
+      'Content-Type': contentType,
+      ...downloadHeaders
     });
     fileStream.pipe(res);
   } else {
     res.writeHead(200, {
       'Content-Length': fileSize,
       'Content-Type': contentType,
-      'Accept-Ranges': 'bytes'
+      'Accept-Ranges': 'bytes',
+      ...downloadHeaders
     });
     fs.createReadStream(filePath).pipe(res);
   }
@@ -120,12 +141,29 @@ const server = http.createServer((req, res) => {
 
 server.listen(PORT, '0.0.0.0', () => {
   const localIp = getLocalIp();
+  const apkUrl = `http://${localIp}:${PORT}/apks/Munchkin-v2.1.0-PTBR.apk`;
+
+  // Gera/Atualiza o QR Code SVG apontando para o IP local atual da rede Wi-Fi
+  try {
+    const qrSvgPath = path.join(PUBLIC_DIR, 'assets', 'qr_munchkin.svg');
+    const pyCmd = `python3 -c "import qrcode, qrcode.image.svg; img = qrcode.make('${apkUrl}', image_factory=qrcode.image.svg.SvgPathImage); f = open('${qrSvgPath}', 'wb'); img.save(f); f.close()"`;
+    exec(pyCmd, (err) => {
+      if (!err) {
+        console.log(`📲 QR Code gerado para Wi-Fi: ${apkUrl}`);
+      }
+    });
+  } catch (err) {
+    // Ignora
+  }
+
   console.log('====================================================');
   console.log('       📼 LOCADORA RETRÔ ANOS 90 ESTÁ ABERTA!       ');
   console.log('====================================================');
   console.log(`🕹️  Acesso no Computador (PC): http://localhost:${PORT}`);
   console.log(`📱 Acesso no Celular (Mobile): http://${localIp}:${PORT}`);
+  console.log(`📦 Download Munchkin APK: ${apkUrl}`);
   console.log('====================================================');
   console.log('Dica: Abra o link do celular no mesmo Wi-Fi para jogar');
   console.log('com controles virtuais de toque na tela do smartphone!');
 });
+

@@ -973,3 +973,419 @@ body {
   }
 }
 
+/* ============================================================
+   SELETOR DE ABAS DO CATÁLOGO (SNES vs MOBILE)
+   ============================================================ */
+.catalog-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin: 1.2rem auto 0.5rem auto;
+  max-width: 1200px;
+  padding: 0 1rem;
+  flex-wrap: wrap;
+}
+
+.catalog-tab-btn {
+  background: #141221;
+  color: #9d9bb0;
+  border: 2px solid #2d2a45;
+  border-radius: 8px;
+  padding: 0.75rem 1.4rem;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+
+.catalog-tab-btn:hover {
+  background: #1f1c33;
+  color: #fff;
+  border-color: var(--neon-cyan);
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.catalog-tab-btn.active {
+  background: linear-gradient(135deg, #1b1638 0%, #291244 100%);
+  color: #fff;
+  border-color: var(--neon-pink);
+  box-shadow: 0 0 20px rgba(255, 0, 127, 0.45);
+}
+
+.tab-count {
+  font-size: 0.9rem;
+  opacity: 0.75;
+  font-weight: 500;
+}
+
+.tab-badge-new {
+  background: var(--neon-pink);
+  color: #fff;
+  font-size: 0.7rem;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-family: 'Press Start 2P', monospace;
+  animation: pulseNeon 1.5s infinite alternate;
+}
+
+@keyframes pulseNeon {
+  0% { transform: scale(0.95); opacity: 0.85; }
+  100% { transform: scale(1.05); opacity: 1; filter: drop-shadow(0 0 6px var(--neon-pink)); }
+}
+
+/* ============================================================
+   SEÇÃO MOBILE & ESTANTE DE DISPOSITIVOS PORTÁTEIS
+   ============================================================ */
+.mobile-banner {
+  border-left: 4px solid #00e5ff;
+}
+
+.mobile-tag {
+  background: #00e5ff;
+  color: #000;
+}
+
+.badge-mobile {
+  background: #00e5ff;
+  color: #000;
+}
+
+.mobile-rules-card {
+  border-color: #00e5ff;
+}
+
+.mobile-rules-card .rules-header {
+  color: #00e5ff;
+  border-color: #00e5ff;
+}
+
+/* Card Mobile na Prateleira */
+.mobile-card-wrapper {
+  position: relative;
+  width: 170px;
+  margin: 0 auto;
+  cursor: pointer;
+  perspective: 800px;
+  transition: transform 0.3s ease;
+}
+
+.mobile-card-wrapper:hover {
+  transform: translateY(-10px) scale(1.04);
+}
+
+.mobile-device-shell {
+  background: linear-gradient(145deg, #1f2336, #111422);
+  border: 3px solid #2f3552;
+  border-radius: 18px;
+  padding: 12px 10px 14px 10px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.mobile-card-wrapper:hover .mobile-device-shell {
+  border-color: #00e5ff;
+  box-shadow: 0 12px 30px rgba(0, 229, 255, 0.35);
+}
+
+.mobile-speaker {
+  width: 32px;
+  height: 4px;
+  background: #3a4163;
+  border-radius: 2px;
+  margin-bottom: 8px;
+}
+
+.mobile-screen-bezel {
+  width: 100%;
+  background: #090a10;
+  border-radius: 10px;
+  border: 1px solid #23273e;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px;
+}
+
+.mobile-card-cover-img {
+  width: 130px;
+  height: 130px;
+  object-fit: contain;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+  transition: transform 0.3s ease;
+}
+
+.mobile-card-wrapper:hover .mobile-card-cover-img {
+  transform: scale(1.03);
+}
+
+.mobile-card-info {
+  width: 100%;
+  text-align: center;
+  margin-top: 8px;
+}
+
+.mobile-card-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mobile-card-sub {
+  font-size: 0.75rem;
+  color: #00e5ff;
+  margin-top: 2px;
+  font-weight: 600;
+}
+
+.mobile-card-badge {
+  display: inline-block;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.55rem;
+  padding: 3px 6px;
+  border-radius: 3px;
+  background: #00e5ff;
+  color: #000;
+  margin-top: 6px;
+}
+
+.mobile-home-indicator {
+  width: 36px;
+  height: 4px;
+  background: #3a4163;
+  border-radius: 2px;
+  margin-top: 8px;
+}
+
+/* ============================================================
+   MODAL MOBILE: DOWNLOAD, QR CODE & GUIAS
+   ============================================================ */
+.mobile-modal-card {
+  max-width: 820px;
+  border: 2px solid #00e5ff;
+  box-shadow: 0 0 35px rgba(0, 229, 255, 0.3);
+}
+
+.mobile-icon-img {
+  border-radius: 24px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
+  border: 2px solid #333a59;
+}
+
+.pkg-name {
+  font-family: monospace;
+  font-size: 0.85rem;
+  color: #00e5ff;
+}
+
+/* Caixa de Transferência */
+.mobile-transfer-box {
+  background: #111424;
+  border: 1px solid #232b49;
+  border-radius: 10px;
+  padding: 1.2rem;
+  margin: 1.2rem 0;
+}
+
+.transfer-header {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #00e5ff;
+  margin-bottom: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.highlight-download {
+  background: linear-gradient(135deg, #00b4d8 0%, #0077b6 100%);
+  color: #fff;
+  border: none;
+  font-size: 1.05rem;
+  padding: 0.85rem 1.6rem;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 15px rgba(0, 180, 216, 0.4);
+}
+
+.highlight-download:hover {
+  background: linear-gradient(135deg, #00e5ff 0%, #0096c7 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 229, 255, 0.6);
+}
+
+/* QR Code Section */
+.qr-section {
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
+  margin-top: 1.2rem;
+  padding-top: 1.2rem;
+  border-top: 1px dashed #232b49;
+  flex-wrap: wrap;
+}
+
+.qr-box {
+  background: #fff;
+  padding: 8px;
+  border-radius: 8px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.6);
+  flex-shrink: 0;
+}
+
+.qr-image {
+  width: 140px;
+  height: 140px;
+  display: block;
+}
+
+.qr-details {
+  flex: 1;
+  min-width: 240px;
+}
+
+.qr-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #ffd700;
+}
+
+.qr-hint {
+  font-size: 0.88rem;
+  color: #b0b4c8;
+  margin: 0.4rem 0 0.8rem 0;
+  line-height: 1.4;
+}
+
+.qr-url-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.retro-input-url {
+  flex: 1;
+  background: #090a12;
+  border: 1px solid #323957;
+  color: #00e5ff;
+  font-family: monospace;
+  font-size: 0.82rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+}
+
+.small-btn {
+  font-size: 0.82rem;
+  padding: 0.5rem 0.9rem;
+  white-space: nowrap;
+}
+
+/* ============================================================
+   GUIAS DE INSTRUÇÕES EM ABAS (CELULAR & LINUX)
+   ============================================================ */
+.mobile-instructions-box {
+  background: #0c0e1a;
+  border: 1px solid #1f253d;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 1.2rem;
+}
+
+.instructions-tabs {
+  display: flex;
+  background: #121528;
+  border-bottom: 1px solid #1f253d;
+  overflow-x: auto;
+}
+
+.inst-tab {
+  background: transparent;
+  border: none;
+  color: #8c92b0;
+  padding: 0.75rem 1.1rem;
+  font-family: 'Rajdhani', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.inst-tab:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.inst-tab.active {
+  color: #00e5ff;
+  border-bottom-color: #00e5ff;
+  background: rgba(0, 229, 255, 0.08);
+}
+
+.instructions-body {
+  padding: 1.2rem;
+}
+
+.inst-panel {
+  display: none;
+}
+
+.inst-panel.active {
+  display: block;
+}
+
+.inst-desc {
+  font-size: 0.9rem;
+  color: #b0b4c8;
+  margin-bottom: 0.9rem;
+  line-height: 1.4;
+}
+
+.step-list {
+  padding-left: 1.2rem;
+  margin: 0;
+  color: #e0e4f5;
+  font-size: 0.92rem;
+  line-height: 1.6;
+}
+
+.step-list li {
+  margin-bottom: 0.8rem;
+}
+
+.code-block {
+  background: #04050a;
+  border: 1px solid #1f2640;
+  border-radius: 6px;
+  padding: 0.6rem 0.85rem;
+  margin-top: 0.4rem;
+  overflow-x: auto;
+}
+
+.code-block code {
+  color: #4ade80;
+  font-family: 'VT323', monospace;
+  font-size: 1.15rem;
+  letter-spacing: 0.5px;
+}
+
+

@@ -32,37 +32,80 @@
       </div>
     </header>
 
-    <!-- Ambiente da Loja: Estante de Fitas -->
-    <main class="store-main">
-      <div class="shelf-banner">
-        <span class="section-tag">PRATELEIRA PRINCIPAL</span>
-        <h2>SUPER NES // CLÁSSICOS & TRADUÇÕES PT-BR</h2>
-        <p class="shelf-hint">Clique em um cartucho para ver detalhes ou alugar e jogar na hora!</p>
-      </div>
+    <!-- Seletor de Seções da Locadora (Abas) -->
+    <nav class="catalog-tabs">
+      <button id="tabSnes" class="catalog-tab-btn active" data-tab="snes">
+        <span class="tab-icon">🎮</span> Super Nintendo <span class="tab-count">(7 Fitas)</span>
+      </button>
+      <button id="tabMobile" class="catalog-tab-btn" data-tab="mobile">
+        <span class="tab-icon">📱</span> Jogos Mobile Android <span class="tab-badge-new">NOVO!</span>
+      </button>
+    </nav>
 
-      <div class="shelf-container">
-        <div class="shelf-wood">
-          <div class="shelf-bracket left"></div>
-          <div class="shelf-grid" id="gamesShelf">
-            <!-- Os cartuchos serão injetados dinamicamente via app.js -->
+    <!-- Ambiente da Loja: Estantes -->
+    <main class="store-main">
+      <!-- SEÇÃO 1: SUPER NINTENDO -->
+      <div id="snesSection" class="catalog-section">
+        <div class="shelf-banner">
+          <span class="section-tag">PRATELEIRA PRINCIPAL</span>
+          <h2>SUPER NES // CLÁSSICOS & TRADUÇÕES PT-BR</h2>
+          <p class="shelf-hint">Clique em um cartucho para ver detalhes ou alugar e jogar na hora!</p>
+        </div>
+
+        <div class="shelf-container">
+          <div class="shelf-wood">
+            <div class="shelf-bracket left"></div>
+            <div class="shelf-grid" id="gamesShelf">
+              <!-- Os cartuchos de SNES serão injetados dinamicamente via app.js -->
+            </div>
+            <div class="shelf-board"></div>
+            <div class="shelf-bracket right"></div>
           </div>
-          <div class="shelf-board"></div>
-          <div class="shelf-bracket right"></div>
+        </div>
+
+        <!-- Rodapé temático da locadora -->
+        <div class="retro-rules-card">
+          <div class="rules-header">REGRAS DA LOCADORA</div>
+          <ul>
+            <li>⚠️ <strong>Não assopre o cartucho</strong> — passe apenas um cotonete com álcool isopropílico.</li>
+            <li>🎮 <strong>Devolução na segunda-feira</strong> até as 18h para evitar multa de R$ 2,00.</li>
+            <li>🇧🇷 <strong>The Legend of Zelda</strong> 100% traduzido para o Português do Brasil!</li>
+          </ul>
         </div>
       </div>
 
-      <!-- Rodapé temático da locadora -->
-      <div class="retro-rules-card">
-        <div class="rules-header">REGRAS DA LOCADORA</div>
-        <ul>
-          <li>⚠️ <strong>Não assopre o cartucho</strong> — passe apenas um cotonete com álcool isopropílico.</li>
-          <li>🎮 <strong>Devolução na segunda-feira</strong> até as 18h para evitar multa de R$ 2,00.</li>
-          <li>🇧🇷 <strong>The Legend of Zelda</strong> 100% traduzido para o Português do Brasil!</li>
-        </ul>
+      <!-- SEÇÃO 2: JOGOS MOBILE (ANDROID) -->
+      <div id="mobileSection" class="catalog-section hidden">
+        <div class="shelf-banner mobile-banner">
+          <span class="section-tag mobile-tag">DISPOSITIVOS PORTÁTEIS</span>
+          <h2>JOGOS MOBILE // APKS TRADUZIDOS (PT-BR)</h2>
+          <p class="shelf-hint">Baixe e instale no seu celular Android ou jogue no Linux via Scrcpy/Waydroid!</p>
+        </div>
+
+        <div class="shelf-container">
+          <div class="shelf-wood glass-shelf">
+            <div class="shelf-bracket left"></div>
+            <div class="shelf-grid" id="mobileShelf">
+              <!-- Os jogos mobile serão injetados dinamicamente via app.js -->
+            </div>
+            <div class="shelf-board"></div>
+            <div class="shelf-bracket right"></div>
+          </div>
+        </div>
+
+        <!-- Dicas Mobile -->
+        <div class="retro-rules-card mobile-rules-card">
+          <div class="rules-header">DICAS DE INSTALAÇÃO & JOGO MOBILE</div>
+          <ul>
+            <li>📱 <strong>No Celular:</strong> Aponte a câmera para o QR Code ou clique em Baixar APK para instalar direto no smartphone.</li>
+            <li>🖥️ <strong>No Linux via scrcpy:</strong> Conecte o cabo USB no celular e jogue na tela do computador com 60 FPS e áudio nativo!</li>
+            <li>🤖 <strong>No Linux via Waydroid:</strong> Execute o APK dentro do contêiner Android no Linux usando tradução ARM (libndk).</li>
+          </ul>
+        </div>
       </div>
     </main>
 
-    <!-- Modal de Detalhes da Fita / Ficha de Aluguel -->
+    <!-- Modal de Detalhes da Fita / Ficha de Aluguel (SNES) -->
     <div id="gameModal" class="modal-backdrop hidden">
       <div class="modal-card">
         <button id="modalCloseBtn" class="modal-close-btn">&times;</button>
@@ -101,6 +144,122 @@
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de Detalhes do Jogo Mobile (APK Android) -->
+    <div id="mobileModal" class="modal-backdrop hidden">
+      <div class="modal-card mobile-modal-card">
+        <button id="mobileModalCloseBtn" class="modal-close-btn">&times;</button>
+        <div class="modal-content">
+          <div class="modal-cover-wrapper mobile-cover-wrapper">
+            <img id="mobileModalCover" src="assets/munchkin_icon.png" alt="Ícone do Jogo" class="modal-cover-img mobile-icon-img">
+            <div id="mobileModalBadge" class="modal-badge badge-mobile">ANDROID</div>
+          </div>
+          <div class="modal-info">
+            <h2 id="mobileModalTitle" class="modal-title">Munchkin</h2>
+            <div id="mobileModalSubtitle" class="modal-subtitle">Edição Digital Oficial (PT-BR)</div>
+
+            <div class="modal-specs-grid">
+              <div class="spec-item"><span class="spec-label">SISTEMA:</span> <span id="mobileModalSystem">Android (arm64-v8a)</span></div>
+              <div class="spec-item"><span class="spec-label">TAMANHO:</span> <span id="mobileModalSize">266.5 MB</span></div>
+              <div class="spec-item"><span class="spec-label">VERSÃO:</span> <span id="mobileModalVersion">v2.1.0</span></div>
+              <div class="spec-item"><span class="spec-label">GÊNERO:</span> <span id="mobileModalGenre">Card Game / RPG</span></div>
+              <div class="spec-item"><span class="spec-label">JOGADORES:</span> <span id="mobileModalPlayers">1-4 Jogadores</span></div>
+              <div class="spec-item"><span class="spec-label">PACOTE:</span> <span id="mobileModalPkg" class="pkg-name">com.direwolfdigital.munchkin</span></div>
+              <div class="spec-item col-span-2"><span class="spec-label">DEV / PUB:</span> <span id="mobileModalDev">Dire Wolf / Steve Jackson Games</span></div>
+              <div class="spec-item col-span-2 highlight-spec"><span class="spec-label">LOCALIZAÇÃO:</span> <span id="mobileModalTranslation">Português (Brasil) 100%</span></div>
+            </div>
+
+            <p id="mobileModalDescription" class="modal-desc">Descrição do jogo...</p>
+
+            <!-- Ações de Transferência e Download -->
+            <div class="mobile-transfer-box">
+              <div class="transfer-header">
+                <span class="pulse-icon">⚡</span> TRANSFERÊNCIA & INSTALAÇÃO
+              </div>
+              
+              <div class="transfer-actions-row">
+                <a id="btnDirectDownloadApk" href="apks/Munchkin-v2.1.0-PTBR.apk" download class="retro-btn play-btn highlight-download">
+                  <span class="btn-icon">📥</span> BAIXAR APK DIRETO (266 MB)
+                </a>
+              </div>
+
+              <!-- QR Code para escanear com o celular na rede Wi-Fi -->
+              <div class="qr-section" id="qrSection">
+                <div class="qr-box">
+                  <img id="qrCodeImg" src="assets/qr_munchkin.svg" alt="QR Code para Download no Celular" class="qr-image">
+                </div>
+                <div class="qr-details">
+                  <div class="qr-title">📱 Escanear no Celular (Mesmo Wi-Fi)</div>
+                  <p class="qr-hint">Aponte a câmera do seu smartphone para o QR Code ao lado para baixar instantaneamente pela rede local:</p>
+                  <div class="qr-url-row">
+                    <input type="text" id="inputApkUrl" readonly class="retro-input-url" value="">
+                    <button id="btnCopyApkUrl" class="retro-btn secondary-btn small-btn">📋 Copiar Link</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Guias em abas para Celular e Linux -->
+            <div class="mobile-instructions-box">
+              <div class="instructions-tabs">
+                <button class="inst-tab active" data-target="inst-phone">📱 Instalar no Celular</button>
+                <button class="inst-tab" data-target="inst-scrcpy">🖥️ Jogar no Linux (scrcpy)</button>
+                <button class="inst-tab" data-target="inst-waydroid">🤖 Jogar no Linux (Waydroid)</button>
+              </div>
+
+              <div class="instructions-body">
+                <!-- Painel 1: Celular -->
+                <div id="inst-phone" class="inst-panel active">
+                  <ol class="step-list">
+                    <li>Baixe o arquivo <code>Munchkin-v2.1.0-PTBR.apk</code> tocando no botão acima ou escaneando o QR Code.</li>
+                    <li>Abra o arquivo baixado. Se o Android exibir o aviso <em>"Para sua segurança, seu telefone não tem permissão para instalar apps desconhecidos desta fonte"</em>, toque em <strong>Configurações</strong> e ative <strong>Permitir desta fonte</strong>.</li>
+                    <li>Toque em <strong>Instalar</strong> e depois em <strong>Abrir</strong> para jogar em Português!</li>
+                  </ol>
+                </div>
+
+                <!-- Painel 2: Linux com scrcpy -->
+                <div id="inst-scrcpy" class="inst-panel">
+                  <p class="inst-desc"><strong>Melhor experiência (60 FPS nativo sem travamento e com áudio):</strong> O jogo roda no celular e a tela é espelhada no Linux com controle via mouse e teclado.</p>
+                  <ol class="step-list">
+                    <li>Instale o ADB e o Scrcpy no Linux:
+                      <div class="code-block"><code>sudo apt install scrcpy adb</code></div>
+                    </li>
+                    <li>No celular, ative a <strong>Depuração USB</strong> (em <em>Configurações &gt; Opções do desenvolvedor</em>) e plugue o cabo USB no PC.</li>
+                    <li>Instale o APK no celular direto pelo terminal do Linux:
+                      <div class="code-block"><code>adb install public/apks/Munchkin-v2.1.0-PTBR.apk</code></div>
+                    </li>
+                    <li>Inicie o jogo em tela cheia no Linux:
+                      <div class="code-block"><code>scrcpy --stay-awake --shortcut-mod=lctrl</code></div>
+                    </li>
+                  </ol>
+                </div>
+
+                <!-- Painel 3: Linux com Waydroid -->
+                <div id="inst-waydroid" class="inst-panel">
+                  <p class="inst-desc"><strong>Android nativo dentro do Linux (sem celular):</strong> Roda o Android compartilhando o kernel com aceleração gráfica pela GPU.</p>
+                  <ol class="step-list">
+                    <li>Instale o Waydroid no Linux:
+                      <div class="code-block"><code>sudo apt install waydroid</code></div>
+                    </li>
+                    <li>Como o APK é <strong>arm64-v8a</strong>, instale a camada de tradução ARM (libndk):
+                      <div class="code-block"><code>sudo apt install python3-pip lxc curl -y
+git clone https://github.com/casualsnek/waydroid_script
+cd waydroid_script && python3 -m venv venv && ./venv/bin/pip install -r requirements.txt
+sudo ./venv/bin/python3 main.py install libndk</code></div>
+                    </li>
+                    <li>Instale e execute o Munchkin:
+                      <div class="code-block"><code>waydroid app install public/apks/Munchkin-v2.1.0-PTBR.apk
+waydroid app launch com.direwolfdigital.munchkin</code></div>
+                    </li>
+                  </ol>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
