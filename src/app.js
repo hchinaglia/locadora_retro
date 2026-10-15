@@ -238,6 +238,9 @@ function openMobileGameModal(game) {
   }
 
   modal.classList.remove('hidden');
+  modal.scrollTop = 0;
+  const card = modal.querySelector('.modal-card');
+  if (card) card.scrollTop = 0;
 }
 
 // Fechar modal Mobile
@@ -295,6 +298,9 @@ function openGameModal(game) {
   }
 
   modal.classList.remove('hidden');
+  modal.scrollTop = 0;
+  const card = modal.querySelector('.modal-card');
+  if (card) card.scrollTop = 0;
 }
 
 // Fechar modal
