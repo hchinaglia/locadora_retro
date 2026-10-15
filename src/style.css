@@ -976,6 +976,30 @@ body {
 /* ============================================================
    SELETOR DE ABAS DO CATÁLOGO (SNES vs MOBILE)
    ============================================================ */
+.catalog-section {
+  display: block;
+  animation: fadeInCatalog 0.25s ease-out;
+}
+
+.catalog-section.hidden {
+  display: none !important;
+}
+
+.hidden:not(.modal-backdrop) {
+  display: none !important;
+}
+
+@keyframes fadeInCatalog {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .catalog-tabs {
   display: flex;
   justify-content: center;

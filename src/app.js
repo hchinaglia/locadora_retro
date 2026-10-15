@@ -377,6 +377,7 @@ function setupEventListeners() {
       tabMobile.classList.remove('active');
       snesSection.classList.remove('hidden');
       mobileSection.classList.add('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 
     tabMobile.addEventListener('click', () => {
@@ -385,6 +386,7 @@ function setupEventListeners() {
       tabSnes.classList.remove('active');
       mobileSection.classList.remove('hidden');
       snesSection.classList.add('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   }
 
