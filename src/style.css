@@ -534,11 +534,13 @@ body {
   box-shadow: 0 0 35px rgba(0, 255, 255, 0.35);
   border-radius: 12px;
   max-width: 860px;
-  width: 100%;
+  width: 95%;
   position: relative;
   margin: auto;
   max-height: 94vh;
   overflow-y: auto;
+  overflow-x: hidden !important;
+  box-sizing: border-box;
 }
 
 .modal-close-btn {
@@ -573,12 +575,16 @@ body {
   display: flex;
   gap: 2rem;
   padding: 2rem;
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .modal-cover-wrapper {
-  flex: 0 0 260px;
+  flex: 0 0 240px;
   position: relative;
   align-self: flex-start;
+  min-width: 0;
 }
 
 .modal-cover-img {
@@ -605,8 +611,12 @@ body {
 
 .modal-info {
   flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .modal-title {
@@ -1303,6 +1313,9 @@ body {
   padding-top: 1.1rem;
   border-top: 1px dashed #232b49;
   flex-wrap: wrap;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .qr-box {
@@ -1320,8 +1333,10 @@ body {
 }
 
 .qr-details {
-  flex: 1;
-  min-width: 200px;
+  flex: 1 1 200px;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .qr-title {
@@ -1342,6 +1357,8 @@ body {
   display: flex;
   gap: 0.5rem;
   width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .retro-input-url {
@@ -1374,27 +1391,33 @@ body {
   border-radius: 10px;
   overflow: hidden;
   margin-top: 1.2rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .instructions-tabs {
   display: flex;
   background: #121528;
   border-bottom: 1px solid #1f253d;
-  overflow-x: auto;
+  flex-wrap: wrap;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .inst-tab {
   background: transparent;
   border: none;
   color: #8c92b0;
-  padding: 0.75rem 1.1rem;
+  padding: 0.65rem 0.85rem;
   font-family: 'Rajdhani', sans-serif;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 700;
   cursor: pointer;
   border-bottom: 2px solid transparent;
   transition: all 0.2s ease;
-  white-space: nowrap;
+  white-space: normal;
+  text-align: center;
+  flex: 1 1 150px;
 }
 
 .inst-tab:hover {
@@ -1410,10 +1433,14 @@ body {
 
 .instructions-body {
   padding: 1.2rem;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .inst-panel {
   display: none;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .inst-panel.active {
@@ -1425,6 +1452,8 @@ body {
   color: #b0b4c8;
   margin-bottom: 0.9rem;
   line-height: 1.4;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .step-list {
@@ -1433,10 +1462,14 @@ body {
   color: #e0e4f5;
   font-size: 0.92rem;
   line-height: 1.6;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .step-list li {
   margin-bottom: 0.8rem;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .code-block {
@@ -1445,6 +1478,8 @@ body {
   border-radius: 6px;
   padding: 0.6rem 0.85rem;
   margin-top: 0.4rem;
+  max-width: 100%;
+  box-sizing: border-box;
   overflow-x: auto;
 }
 
